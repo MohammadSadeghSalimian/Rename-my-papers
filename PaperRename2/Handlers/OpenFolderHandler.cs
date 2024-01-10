@@ -19,7 +19,7 @@ public class OpenFolderHandler : IRequestHandler<GetFolderQuery, DirectoryInfo>
     public async Task<DirectoryInfo> Handle(GetFolderQuery request, CancellationToken cancellationToken)
     {
         var op = _dialogBuilder.GetDialog();
-
+         
 
         op.Title = "Select the working folder";
         return !op.OpenFolderDialog(out var name) ? null : await Task.FromResult(new DirectoryInfo(name));
