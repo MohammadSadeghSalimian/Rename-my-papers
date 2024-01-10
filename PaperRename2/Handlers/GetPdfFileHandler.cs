@@ -14,6 +14,7 @@ namespace PaperRename2.Handlers
         public GetPdfFileHandler(ICommonDialogBuilder dialogBuilder)
         {
             _dialogBuilder = dialogBuilder;
+
         }
         public async Task<FileInfo> Handle(GetPdfFileQuery request, CancellationToken cancellationToken)
         {
