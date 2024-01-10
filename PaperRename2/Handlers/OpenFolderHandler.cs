@@ -11,6 +11,7 @@ public class OpenFolderHandler : IRequestHandler<GetFolderQuery, DirectoryInfo>
 {
     private readonly ICommonDialogBuilder _dialogBuilder;
 
+
     public OpenFolderHandler(ICommonDialogBuilder dialogBuilder)
     {
         _dialogBuilder = dialogBuilder;
