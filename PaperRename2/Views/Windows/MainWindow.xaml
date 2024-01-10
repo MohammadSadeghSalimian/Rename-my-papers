@@ -1,0 +1,33 @@
+﻿<views:BaseWindow x:TypeArguments="viewModels:MainViewModel" x:Class="PaperRename2.Views.Windows.MainWindow"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:local="clr-namespace:PaperRename2"
+                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                  xmlns:views="clr-namespace:PaperRename2.Views"
+                  xmlns:viewModels="clr-namespace:PaperRename2.ViewModels"
+                  xmlns:ucs="clr-namespace:PaperRename2.Views.Ucs"
+                  mc:Ignorable="d"
+                  Title="Paper Rename" Height="620" Width="1200" mah:DialogParticipation.Register="{Binding}" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        
+    </Window.Resources>
+   
+   <Grid>
+       <Grid.ColumnDefinitions>
+           <ColumnDefinition Width="6*"/>
+           <ColumnDefinition Width="6*"/>
+       </Grid.ColumnDefinitions>
+        <TabControl Grid.Column="1" Style="{StaticResource TabController}">
+            <TabItem Style="{StaticResource TabItem}" Header="General" mah:HeaderedControlHelper.HeaderFontSize="12">
+                <ucs:EditUc x:Name="EditUc"></ucs:EditUc>
+            </TabItem>
+            <TabItem Style="{StaticResource TabItem}" Header="Help">
+               <ucs:HelpUc x:Name="HelpUc"></ucs:HelpUc>
+            </TabItem>
+        </TabControl>
+        <ucs:FileListUc x:Name="FileListUc" Grid.Column="0"></ucs:FileListUc>
+    </Grid>
+
+</views:BaseWindow>

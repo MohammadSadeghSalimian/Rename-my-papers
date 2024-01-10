@@ -1,0 +1,79 @@
+﻿<local:RBaseUc x:TypeArguments="viewModels:EditVm" x:Class="PaperRename2.Views.Ucs.EditUc"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+               xmlns:local="clr-namespace:PaperRename2.Views.Ucs"
+               xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+               xmlns:viewModels="clr-namespace:PaperRename2.ViewModels"
+               mc:Ignorable="d" 
+               d:DesignHeight="600" d:DesignWidth="600" Background="WhiteSmoke">
+    <UserControl.InputBindings>
+        <KeyBinding Modifiers="Control" Key="E"></KeyBinding>
+        <KeyBinding Modifiers="Control" Key="O"></KeyBinding>
+
+    </UserControl.InputBindings>
+    <GroupBox Margin="3" Header="Information" >
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="6*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Content="Title:" Style="{StaticResource LabelStyle}" />
+                <Label Grid.Row="1" Grid.Column="0" Content="Year:" Style="{StaticResource LabelStyle}" />
+                <Label Grid.Row="2" Grid.Column="0" Content="Authors:" Style="{StaticResource LabelStyle}" />
+                <Label Grid.Row="3" Grid.Column="0" Content="Name:" Style="{StaticResource LabelStyle}" />
+                <TextBox GotFocus="Txt_OnGotFocus" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" x:Name="TitleTxt" Grid.Row="0" Grid.Column="1" Style="{StaticResource TextBoxStyle}"  KeyDown="MainWindow_OnKeyDown" />
+                <mah:NumericUpDown TextAlignment="Left" HorizontalContentAlignment="Left" x:Name="YearNum" Grid.Row="1" Grid.Column="1" FontSize="14" FontWeight="SemiBold" Height="35"
+                     Margin="3" />
+                <TextBox AcceptsReturn="True" Height="100" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" x:Name="AuthorTxt" Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxStyle}" KeyDown="MainWindow_OnKeyDown" GotFocus="Txt_OnGotFocus"/>
+
+                <TextBox Grid.ColumnSpan="2" Height="70" TextWrapping="Wrap" VerticalContentAlignment="Top" x:Name="NameTxt" Grid.Row="3" Grid.Column="1" Style="{StaticResource TextBoxStyle}" />
+                <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="3">
+
+
+                    <GroupBox Header="Controls" Style="{StaticResource GroupBoxStyle}">
+                        <StackPanel>
+                            <StackPanel.Resources>
+
+                            </StackPanel.Resources>
+                            <Button x:Name="EtAlBtn" Content="Add et al" Style="{StaticResource ButtonStyle2}" ToolTip="Ctrl+E"/>
+                            <Separator></Separator>
+                            <Button Click="TitleBtn_OnClick" x:Name="TitleizeBtn" Style="{StaticResource ButtonStyle2}"  Content="Titleize"  ToolTip="Ctrl+T"/>
+
+
+                            <Button Style="{StaticResource ButtonStyle2}"  x:Name="ConvertBtn" Content="Simplify" Click="ConvertBtn_OnClick"></Button>
+                            <Button Style="{StaticResource ButtonStyle2}"  x:Name="ShortBtn" Content="Make Short" Click="ShortBtn_OnClick" ToolTip="Ctrl+S"></Button>
+                            <Button Style="{StaticResource ButtonStyle2}"  x:Name="CapitalBtn" Content="Make Upper" Click="CapitalBtn_OnClick" ToolTip="Ctrl+U"></Button>
+                            <Button Style="{StaticResource ButtonStyle2}"  x:Name="LowerBtn" Content="Make Lower" Click="LowerBtn_OnClick" ToolTip="Ctrl+L"></Button>
+
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
+            </Grid>
+            <UniformGrid Grid.Row="1" Columns="4">
+                <UniformGrid.Resources>
+
+                </UniformGrid.Resources>
+                <Button x:Name="LoadBtn" Content="Load" Style="{StaticResource ButtonStyle2}" />
+                <Button ToolTip="Ctrl+O"  Style="{StaticResource ButtonStyle2}" x:Name="OpenBtn" Content="Open"></Button>
+                <Button x:Name="GetNameBtn" Content="Get Name" Style="{StaticResource ButtonStyle2}" />
+                <Button x:Name="RenameBtn" Content="Rename" Style="{StaticResource ButtonStyle2}" />
+
+            </UniformGrid>
+        </Grid>
+    </GroupBox>
+</local:RBaseUc>
