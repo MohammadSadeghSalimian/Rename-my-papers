@@ -1,8 +1,8 @@
-﻿namespace PaperRename2.ViewModels;
+﻿namespace PaperRename2.Wpf.ViewModels;
 
 public interface ISharedModel
 {
-    public IKeyContainer KeyContainer { get; }
-    public IEventContainer EventContainer { get; }
+    public ISharedKeys SharedKeys { get; }
+    public ISharedEvents SharedEvents { get; }
     
 }

@@ -1,7 +1,8 @@
-﻿using ReactiveUI.Fody.Helpers;
+﻿using PaperRename2.Core;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
-namespace PaperRename2.Services
+namespace PaperRename2.Wpf.Services
 {
 
     public class PaperModel :ReactiveObject, IPaperModel

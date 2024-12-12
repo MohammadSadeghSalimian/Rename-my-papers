@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace PaperRename2.Services
+namespace PaperRename2.Wpf.Services
 {
     public class CommonDialogUnit : ICommonDialogUnit
     {

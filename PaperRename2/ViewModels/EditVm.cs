@@ -1,25 +1,31 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using MediatR;
-using PaperRename2.Commands;
-using PaperRename2.Queries;
-using PaperRename2.Services;
+using PaperRename2.App.Commands;
+using PaperRename2.App.Services;
+using PaperRename2.Core;
+using PaperRename2.Wpf.Services;
 using ReactiveUI;
 using Unit = System.Reactive.Unit;
 
-namespace PaperRename2.ViewModels;
+namespace PaperRename2.Wpf.ViewModels;
 
 public class EditVm : BaseViewModel
 {
     private readonly IMediator _mediator;
     private readonly ISharedModel _sharedModel;
     private readonly IMessageUnit _messageUnit;
+    private readonly ICommonDialogBuilder _dialogBuilder;
+    private readonly ISharedEvents _sharedEvents;
     public IPaperModel Paper { get; }
-    public EditVm(IMediator mediator, ISharedModel sharedModel, IMessageUnit messageUnit, IPaperModel paperModel)
+    public EditVm(IMediator mediator, ISharedModel sharedModel, IMessageUnit messageUnit, IPaperModel paperModel,ICommonDialogBuilder dialogBuilder,ISharedEvents sharedEvents)
     {
         _mediator = mediator;
         _sharedModel = sharedModel;
         _messageUnit = messageUnit;
+        _dialogBuilder = dialogBuilder;
+        _sharedEvents = sharedEvents;
         Paper = paperModel;
         SetupCmd();
     }
@@ -31,8 +37,8 @@ public class EditVm : BaseViewModel
     protected sealed override void SetupCmd()
     {
         LoadFileCmd = ReactiveCommand.CreateFromTask(Load);
-        var can = this.WhenAnyValue(x => x._sharedModel.KeyContainer.IsFileOpened);
-        var can2 = this.WhenAnyValue(x => x._sharedModel.KeyContainer.NameAvailable);
+        var can = this.WhenAnyValue(x => x._sharedModel.SharedKeys.IsFileOpened);
+        var can2 = this.WhenAnyValue(x => x._sharedModel.SharedKeys.NameAvailable);
         RenameCmd = ReactiveCommand.CreateFromTask(Rename, can2);
         GetNameCmd = ReactiveCommand.Create(GetName, can);
         AddEtAlNameCmd = ReactiveCommand.Create(AddEtAl, can);
@@ -41,25 +47,23 @@ public class EditVm : BaseViewModel
     }
     private async Task Load()
     {
-        var f = await _mediator.Send(new GetPdfFileQuery());
-        if (f == null)
+        var op = _dialogBuilder.GetDialog();
+        op.SetFilters("Pdf files|.pdf","epub files |.epub");
+        op.DefaultExtension = "pdf";
+        op.Title = "Select the paper";
+        if (!op.OpenFileDialog(out var name))
         {
             return;
         }
-
         try
         {
-            await _mediator.Send(new ReadPdfInformationCommand(f));
-            _sharedModel.KeyContainer.IsFileOpened = true;
+            await _mediator.Send(new ReadPdfInformationCommand(new FileInfo(name)));
         }
         catch (Exception e)
         {
-
-            await _mediator.Send(new ReadInformationWithErrorCommand(f, e));
-            _sharedModel.KeyContainer.IsFileOpened = true;
+            await _mediator.Send(new ReadInformationWithErrorRq(new FileInfo(name), e));
         }
-
-
+        _sharedModel.SharedKeys.IsFileOpened = true;
     }
 
     private void AddEtAl()
@@ -81,7 +85,7 @@ public class EditVm : BaseViewModel
         try
         {
             Paper.GetFileName();
-            _sharedModel.KeyContainer.NameAvailable = true;
+            _sharedModel.SharedKeys.NameAvailable = true;
         }
         catch (Exception e)
         {
@@ -92,13 +96,19 @@ public class EditVm : BaseViewModel
     {
         try
         {
-            await _mediator.Send(new RenamePdfCommand(Paper.Name));
-            _sharedModel.KeyContainer.IsFileOpened = false;
-            _sharedModel.KeyContainer.NameAvailable = false;
+           var fileName= await _mediator.Send(new RenamePdfCommand(Paper.Name));
+            _sharedModel.SharedKeys.IsFileOpened = false;
+            _sharedModel.SharedKeys.NameAvailable = false;
+
+           
+            _sharedEvents.FileRenamed(fileName, Paper.Name);
+           await _messageUnit.InformationMessage("The file is renamed!");
+
+
         }
         catch (Exception e)
         {
-            _messageUnit.ErrorMessage(e);
+           await _messageUnit.ErrorMessage(e);
         }
     }
 
@@ -110,7 +120,7 @@ public class EditVm : BaseViewModel
         }
         catch (Exception e)
         {
-            _messageUnit.ErrorMessage(e);
+           await _messageUnit.ErrorMessage(e);
         }
     }
 }

@@ -1,8 +1,17 @@
 ﻿using System.Windows.Controls;
 using Humanizer;
+using PaperRename2.Core;
 
-namespace PaperRename2.Services
+namespace PaperRename2.Wpf.Services
 {
+    public interface ITextController
+    {
+        void MakeItShort(object textBox);
+        void TittleSimplify(object textBox);
+        void MakeItTitle(object textBox);
+        void MakeUpper(object textBox);
+        void MakeLower(object textBox);
+    }
     public class TextController:ITextController
     {
         public void MakeUpper(object textBox)
@@ -66,7 +75,7 @@ namespace PaperRename2.Services
             }
             var txt1 = tb.Text;
             var selectedTxt = tb.SelectedText;
-            var st = selectedTxt.Trim().ToUpper().Substring(0, 1) + ". ";
+            var st = selectedTxt.Trim().ToUpper()[..1] + ". ";
             tb.Text = txt1.Replace(selectedTxt, st);
         }
 

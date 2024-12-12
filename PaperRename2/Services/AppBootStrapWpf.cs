@@ -1,12 +1,16 @@
 ﻿using Autofac;
-using PaperRename2.ViewModels;
 using MahApps.Metro.Controls.Dialogs;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
+using PaperRename2.App.Commands;
+using PaperRename2.App.Services;
+using PaperRename2.Core;
+using PaperRename2.Pdf;
+using PaperRename2.Wpf.ViewModels;
 using ReactiveUI;
 using Splat.Autofac;
 
-namespace PaperRename2.Services
+namespace PaperRename2.Wpf.Services
 {
     public class AppBootStrapWpf
     {
@@ -29,13 +33,14 @@ namespace PaperRename2.Services
             _builder.RegisterType<DialogBuilder>().As<ICommonDialogBuilder>().AsSelf().SingleInstance();
             _builder.RegisterType<MessageUnit>().As<IMessageUnit>().AsSelf().SingleInstance();
             _builder.RegisterType<TextController>().As<ITextController>().AsSelf().SingleInstance();
-            _builder.RegisterType<KeyContainer>().As<IKeyContainer>().AsSelf().SingleInstance();
-            _builder.RegisterType<EventContainer>().As<IEventContainer>().AsSelf().SingleInstance();
+            _builder.RegisterType<SharedKeys>().As<ISharedKeys>().AsSelf().SingleInstance();
+            _builder.RegisterType<SharedEvents>().As<ISharedEvents>().AsSelf().SingleInstance();
             _builder.RegisterType<SharedModel>().As<ISharedModel>().AsSelf().SingleInstance();
             _builder.RegisterType<FolderManager>().As<IFolderManager>().AsSelf().SingleInstance();
+            _builder.RegisterType<ProtectionRemover>().As<IProtectionRemover>().AsSelf().SingleInstance();
 
             var configuration = MediatRConfigurationBuilder
-                .Create(typeof(AppBootStrapWpf).Assembly)
+                .Create(typeof(AppBootStrapWpf).Assembly,typeof(GetPdfFilesHandler).Assembly)
                 .WithAllOpenGenericHandlerTypesRegistered() // Register all handlers by convention
                 .WithRegistrationScope(RegistrationScope.Scoped) // Set the registration scope
                 .Build();

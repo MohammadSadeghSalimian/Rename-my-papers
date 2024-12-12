@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperRename2", "PaperRename2\PaperRename2.csproj", "{E0C618E3-14C3-4B9E-B1B7-7F8582E9BF23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaperRename2.Wpf", "PaperRename2\PaperRename2.Wpf.csproj", "{E0C618E3-14C3-4B9E-B1B7-7F8582E9BF23}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructures", "Infrastructures", "{383F5A08-BF20-44E2-BFD3-71E8F9C15D15}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{6E140F1F-E032-4EDE-91D9-F2E3D2CC3405}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{E2984851-EEFA-44E4-BBC7-BF0CC9026456}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{342DFEC0-5444-46E7-BC3C-7412840353DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperRename2.App", "PaperRename2.App\PaperRename2.App.csproj", "{35BDCBD6-4289-48BF-9BD1-CAB3141C8190}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperRename2.Core", "PaperRename2.Core\PaperRename2.Core.csproj", "{30524EA1-575C-4C12-ACC1-6D7638BA4AC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperRename2.Pdf", "PaperRename2.Pdf\PaperRename2.Pdf.csproj", "{0E946831-967F-48BD-9F36-F4B02053758A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{8C0A7465-65F7-47EE-B9FC-55AE00BB316F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperRename2.Tests", "PaperRename2.Tests\PaperRename2.Tests.csproj", "{A1D9B4ED-9144-411F-8D67-3E65B0C2136E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +33,32 @@ Global
 		{E0C618E3-14C3-4B9E-B1B7-7F8582E9BF23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0C618E3-14C3-4B9E-B1B7-7F8582E9BF23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0C618E3-14C3-4B9E-B1B7-7F8582E9BF23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35BDCBD6-4289-48BF-9BD1-CAB3141C8190}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35BDCBD6-4289-48BF-9BD1-CAB3141C8190}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35BDCBD6-4289-48BF-9BD1-CAB3141C8190}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35BDCBD6-4289-48BF-9BD1-CAB3141C8190}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30524EA1-575C-4C12-ACC1-6D7638BA4AC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30524EA1-575C-4C12-ACC1-6D7638BA4AC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30524EA1-575C-4C12-ACC1-6D7638BA4AC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30524EA1-575C-4C12-ACC1-6D7638BA4AC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E946831-967F-48BD-9F36-F4B02053758A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E946831-967F-48BD-9F36-F4B02053758A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E946831-967F-48BD-9F36-F4B02053758A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E946831-967F-48BD-9F36-F4B02053758A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1D9B4ED-9144-411F-8D67-3E65B0C2136E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1D9B4ED-9144-411F-8D67-3E65B0C2136E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1D9B4ED-9144-411F-8D67-3E65B0C2136E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1D9B4ED-9144-411F-8D67-3E65B0C2136E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E0C618E3-14C3-4B9E-B1B7-7F8582E9BF23} = {6E140F1F-E032-4EDE-91D9-F2E3D2CC3405}
+		{35BDCBD6-4289-48BF-9BD1-CAB3141C8190} = {E2984851-EEFA-44E4-BBC7-BF0CC9026456}
+		{30524EA1-575C-4C12-ACC1-6D7638BA4AC1} = {342DFEC0-5444-46E7-BC3C-7412840353DF}
+		{0E946831-967F-48BD-9F36-F4B02053758A} = {383F5A08-BF20-44E2-BFD3-71E8F9C15D15}
+		{A1D9B4ED-9144-411F-8D67-3E65B0C2136E} = {8C0A7465-65F7-47EE-B9FC-55AE00BB316F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01CAC6A2-273E-440F-8FA4-79E7EF0A0CEA}

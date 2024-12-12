@@ -1,9 +1,9 @@
-﻿using Splat;
-using System.Reactive.Disposables;
-using PaperRename2.ViewModels;
+﻿using System.Reactive.Disposables;
+using PaperRename2.Wpf.ViewModels;
 using ReactiveUI;
+using Splat;
 
-namespace PaperRename2.Views.Windows
+namespace PaperRename2.Wpf.Views.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

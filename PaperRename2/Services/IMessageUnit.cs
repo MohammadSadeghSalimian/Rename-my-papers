@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 
-namespace PaperRename2.Services
+namespace PaperRename2.Wpf.Services
 {
     public interface IMessageUnit
     {
         void SetParentObject(object mainVm);
-        void ErrorMessage(string message);
-        void ErrorMessage(Exception error);
-        void WarningMessage(string message);
-        void InformationMessage(string message);
+        Task ErrorMessage(string message);
+        Task ErrorMessage(Exception error);
+        Task WarningMessage(string message);
+        Task InformationMessage(string message);
     }
 }

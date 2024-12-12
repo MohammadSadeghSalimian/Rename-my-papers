@@ -1,15 +1,7 @@
-﻿using System.IO;
+﻿namespace PaperRename2.Wpf.Models;
 
-namespace PaperRename2.Models;
-
-public class FileRenamedModel
+public class FileRenamedModel(string previousName, string newName)
 {
-    public FileRenamedModel(string previousName, string newName)
-    {
-        PreviousName = previousName;
-        NewName = newName;
-    }
-    public string PreviousName { get; }
-    public string NewName { get; }
-
+    public string PreviousName { get; } = previousName;
+    public string NewName { get; } = newName;
 }

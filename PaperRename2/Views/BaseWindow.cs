@@ -1,9 +1,9 @@
-﻿using ReactiveUI;
-using Splat;
-using System.Reactive.Disposables;
+﻿using System.Reactive.Disposables;
 using MahApps.Metro.Controls;
+using ReactiveUI;
+using Splat;
 
-namespace PaperRename2.Views
+namespace PaperRename2.Wpf.Views
 {
     public abstract class BaseWindow<T> :MetroWindow,  IViewFor<T> where T : class
     {

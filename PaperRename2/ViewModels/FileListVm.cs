@@ -1,38 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using DynamicData;
 using MediatR;
-using PaperRename2.Commands;
-using PaperRename2.Models;
-using PaperRename2.Queries;
-using PaperRename2.Services;
+using PaperRename2.App.Commands;
+using PaperRename2.App.Services;
+using PaperRename2.Wpf.Models;
+using PaperRename2.Wpf.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Unit = System.Reactive.Unit;
 
-namespace PaperRename2.ViewModels;
+namespace PaperRename2.Wpf.ViewModels;
 
 public sealed class FileListVm : BaseViewModel
 {
     private readonly ISharedModel _sharedModel;
     private readonly IFolderManager _folderManager;
+    private readonly ICommonDialogBuilder _dialogBuilder;
     private readonly IMessageUnit _messageUnit;
     private readonly IMediator _mediator;
     private readonly SourceList<PdfNameModel> _fileSource;
-    private List<IDisposable> _disposables;
-    public FileListVm(IMediator mediator, IMessageUnit messageUnit, ISharedModel sharedModel, IFolderManager folderManager)
+    private readonly CompositeDisposable _disposables;
+    public FileListVm(IMediator mediator, IMessageUnit messageUnit, ISharedModel sharedModel, IFolderManager folderManager,ICommonDialogBuilder dialogBuilder)
     {
-        _disposables=new List<IDisposable>();
+        _disposables = [];
         _mediator = mediator;
         _messageUnit = messageUnit;
         _sharedModel = sharedModel;
         _folderManager = folderManager;
+        _dialogBuilder = dialogBuilder;
         _fileSource = new SourceList<PdfNameModel>();
         _fileSource.Connect().Bind(out _files).Subscribe();
-        var d=_sharedModel.EventContainer.FileRenamedEvent.Subscribe(Refresh);
+        var d = _sharedModel.SharedEvents.FileRenamedEvent.Subscribe(Refresh);
         _disposables.Add(d);
         SetupCmd();
     }
@@ -48,40 +53,58 @@ public sealed class FileListVm : BaseViewModel
     public ReactiveCommand<Unit, Unit> MoveToLaterCmd { get; private set; }
     public ReactiveCommand<Unit, Unit> OpenPdfCmd { get; private set; }
 
-    [Reactive] public PdfNameModel SelectedPdf { get; set; }
+    [Reactive] public PdfNameModel SelectedFile { get; set; }
+    public ReactiveCommand<Unit, Unit> RemoveProtectionCmd { get;private set; }
 
     protected override void SetupCmd()
     {
-        var can = this.WhenAnyValue(x => x._sharedModel.KeyContainer.RootFolderSelected);
-        var can2 = this.WhenAnyValue(x => x._sharedModel.KeyContainer.IsFileOpened);
+        var can1 = this.WhenAnyValue(x => x._sharedModel.SharedKeys.RootFolderSelected);
+        var can2 = this.WhenAnyValue(x => x._sharedModel.SharedKeys.IsFileOpened);
+        var can3 = this.WhenAnyValue(x => x.SelectedFile).WhereNotNull().Select(x => !string.IsNullOrEmpty(x.Name));
+        var can4 = can1.CombineLatest(can3, (a, b) => a & b);
+     
         LoadFolderCmd = ReactiveCommand.CreateFromTask(SelectRootFolder);
-        LoadPdfFileCmd = ReactiveCommand.CreateFromTask(LoadSelectedPdf, can);
-        MoveToLaterCmd = ReactiveCommand.CreateFromTask(MoveToLater, can);
-        MoveToRenamedCmd = ReactiveCommand.CreateFromTask(MoveToRenamed, can);
+        LoadPdfFileCmd = ReactiveCommand.CreateFromTask(LoadSelectedPdf, can4);
+        MoveToLaterCmd = ReactiveCommand.CreateFromTask(MoveToLater, can4);
+        MoveToRenamedCmd = ReactiveCommand.CreateFromTask(MoveToRenamed, can4);
+        RemoveProtectionCmd = ReactiveCommand.CreateFromTask(RemoveProtection, can4);
         OpenPdfCmd = ReactiveCommand.CreateFromTask(OpenPdfFile, can2);
+    }
+
+    private async Task RemoveProtection()
+    {
+        try
+        {
+            var f = _folderManager.GetFileByName(SelectedFile.Name);
+            await _mediator.Send(new RemoveProtectionRq(f));
+        }
+        catch (Exception e)
+        {
+          await _messageUnit.ErrorMessage(e);
+        }
     }
 
     private async Task SelectRootFolder()
     {
-        var folder = await _mediator.Send(new GetFolderQuery());
-        if (folder is not { Exists: true })
+        var op = _dialogBuilder.GetDialog();
+        op.Title = "Select the working folder";
+        if (!op.OpenFolderDialog(out var name))
         {
-
             return;
         }
         _fileSource.Clear();
-        var ll = await _mediator.Send(new GetPdfFilesQuery(folder));
+        var ll = await _mediator.Send(new GetPdfFilesQuery(new DirectoryInfo(name)));
         _fileSource.AddRange(ll.Select(x => new PdfNameModel(x)));
-        this._sharedModel.KeyContainer.RootFolderSelected = true;
+        this._sharedModel.SharedKeys.RootFolderSelected = true;
     }
 
     private async Task LoadSelectedPdf()
     {
-        if (string.IsNullOrEmpty(this.SelectedPdf?.Name))
+        if (string.IsNullOrEmpty(this.SelectedFile?.Name))
         {
             return;
         }
-        var f = _folderManager.GetFileByName(SelectedPdf.Name);
+        var f = _folderManager.GetFileByName(SelectedFile.Name);
         if (f == null)
         {
             return;
@@ -90,13 +113,13 @@ public sealed class FileListVm : BaseViewModel
         try
         {
             await _mediator.Send(new ReadPdfInformationCommand(f));
-            _sharedModel.KeyContainer.IsFileOpened = true;
+            _sharedModel.SharedKeys.IsFileOpened = true;
         }
         catch (Exception e)
         {
 
-            await _mediator.Send(new ReadInformationWithErrorCommand(f, e));
-            _sharedModel.KeyContainer.IsFileOpened = true;
+            await _mediator.Send(new ReadInformationWithErrorRq(f, e));
+            _sharedModel.SharedKeys.IsFileOpened = true;
         }
     }
 
@@ -105,16 +128,16 @@ public sealed class FileListVm : BaseViewModel
         var notCompleted = await _mediator.Send(new MoveToFolderCommand("Later", Files.Where(x => x.IsSelected).Select(x => x.Name)));
         if (notCompleted.Any())
         {
-            _messageUnit.ErrorMessage($"The following files cannot be moved!\r\n {string.Join(Environment.NewLine,notCompleted)}");
+           await _messageUnit.ErrorMessage($"The following files cannot be moved!\r\n {string.Join(Environment.NewLine, notCompleted)}");
         }
-        _fileSource.RemoveMany(Files.Where(x=>x.IsSelected));
+        _fileSource.RemoveMany(Files.Where(x => x.IsSelected));
     }
     private async Task MoveToRenamed()
     {
         var notCompleted = await _mediator.Send(new MoveToFolderCommand("Renamed", Files.Where(x => x.IsSelected).Select(x => x.Name)));
         if (notCompleted.Any())
         {
-            _messageUnit.ErrorMessage($"The following files cannot be moved!\r\n {string.Join(Environment.NewLine, notCompleted)}");
+            await _messageUnit.ErrorMessage($"The following files cannot be moved!\r\n {string.Join(Environment.NewLine, notCompleted)}");
         }
         _fileSource.RemoveMany(Files.Where(x => x.IsSelected));
     }
@@ -126,7 +149,7 @@ public sealed class FileListVm : BaseViewModel
         {
             return;
         }
-        _fileSource.Replace(a,new PdfNameModel(model.NewName)
+        _fileSource.Replace(a, new PdfNameModel(model.NewName)
         {
             IsSelected = true,
         });
@@ -139,7 +162,7 @@ public sealed class FileListVm : BaseViewModel
         }
         catch (Exception e)
         {
-            _messageUnit.ErrorMessage(e);
+            await _messageUnit.ErrorMessage(e);
         }
     }
 }

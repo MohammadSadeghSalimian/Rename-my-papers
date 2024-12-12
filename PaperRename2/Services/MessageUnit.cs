@@ -1,57 +1,52 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using MahApps.Metro.Controls.Dialogs;
 
-namespace PaperRename2.Services
+namespace PaperRename2.Wpf.Services
 {
-    public class MessageUnit : IMessageUnit
+    public class MessageUnit(IDialogCoordinator coordinator) : IMessageUnit
     {
-        private readonly IDialogCoordinator _coordinator;
-        private readonly ISubject<string> _newMessage;
+        private readonly Subject<string> _newMessage = new();
         private object _parent;
-        public MessageUnit(IDialogCoordinator message)
-        {
-            _newMessage = new Subject<string>();
-            _coordinator = message;
-        }
         public IObservable<string> NewMessage => _newMessage.AsObservable();
         public void SetParentObject(object parent)
         {
             _parent = parent;
         }
-        public void ErrorMessage(string message)
+        public async Task ErrorMessage(string message)
         {
-            ShowMessage(MessageType.Error, message);
+            await ShowMessage(MessageType.Error, message);
         }
-        public void ErrorMessage(Exception error)
+        public async Task ErrorMessage(Exception error)
         {
-            ShowMessage(MessageType.Error, error.Message);
+            await ShowMessage(MessageType.Error, error.Message);
         }
-        public void WarningMessage(string message)
+        public async Task WarningMessage(string message)
         {
-            ShowMessage(MessageType.Warning, message);
+            await ShowMessage(MessageType.Warning, message);
         }
-        public void InformationMessage(string message)
+        public async Task InformationMessage(string message)
         {
-            ShowMessage(MessageType.Information, message);
+           await ShowMessage(MessageType.Information, message);
         }
         public void WriteMessage(string str)
         {
             _newMessage.OnNext($"{DateTime.Now:T}: {str}{Environment.NewLine}");
         }
-        private void ShowMessage(MessageType type, string message)
+        private async Task ShowMessage(MessageType type, string message)
         {
             switch (type)
             {
                 case MessageType.Error:
-                    _coordinator.ShowMessageAsync(_parent, "Error!", message);
+                  await  coordinator.ShowMessageAsync(_parent, "Error!", message);
                     break;
                 case MessageType.Warning:
-                    _coordinator.ShowMessageAsync(_parent, "Warning!", message);
+                   await coordinator.ShowMessageAsync(_parent, "Warning!", message);
                     break;
                 case MessageType.Information:
-                    _coordinator.ShowMessageAsync(_parent, "Info", message);
+                   await coordinator.ShowMessageAsync(_parent, "Info", message);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);

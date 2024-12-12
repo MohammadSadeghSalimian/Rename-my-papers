@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using PaperRename2.Services;
+using PaperRename2.Wpf.Services;
 
-namespace PaperRename2
+namespace PaperRename2.Wpf
 {
     /// <summary>
     /// Interaction logic for App.xaml

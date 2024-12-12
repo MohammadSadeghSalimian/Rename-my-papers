@@ -1,4 +1,4 @@
-﻿namespace PaperRename2.Services
+﻿namespace PaperRename2.Wpf.Services
 {
     public enum MessageType
     {

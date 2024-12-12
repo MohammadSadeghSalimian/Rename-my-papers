@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace PaperRename2.ViewModels;
+namespace PaperRename2.Wpf.ViewModels;
 
 public abstract class BaseViewModel:ReactiveObject
 {

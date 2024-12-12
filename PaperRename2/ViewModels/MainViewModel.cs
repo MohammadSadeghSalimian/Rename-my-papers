@@ -1,20 +1,20 @@
 ﻿using MediatR;
-using PaperRename2.Services;
+using PaperRename2.Wpf.Services;
 
-namespace PaperRename2.ViewModels
+namespace PaperRename2.Wpf.ViewModels
 {
     public sealed class MainViewModel : BaseViewModel
     {
         private readonly IMediator _mediator;
-        private readonly IKeyContainer _keyContainer;
+        private readonly ISharedKeys _sharedKeys;
         private readonly IMessageUnit _messageUnit;
 
-        public MainViewModel(IMessageUnit messageUnit, IKeyContainer keyContainer, IMediator mediator, EditVm editVm, FileListVm fileListVm)
+        public MainViewModel(IMessageUnit messageUnit, ISharedKeys sharedKeys, IMediator mediator, EditVm editVm, FileListVm fileListVm)
         {
 
 
             _messageUnit = messageUnit;
-            _keyContainer = keyContainer;
+            _sharedKeys = sharedKeys;
             _mediator = mediator;
             EditVm = editVm;
             FileListVm = fileListVm;

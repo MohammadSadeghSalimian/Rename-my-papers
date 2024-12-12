@@ -1,10 +1,8 @@
 ﻿using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Windows.Controls;
-using PaperRename2.ViewModels;
+using PaperRename2.Wpf.ViewModels;
 using ReactiveUI;
 
-namespace PaperRename2.Views.Ucs
+namespace PaperRename2.Wpf.Views.Ucs
 {
     /// <summary>
     /// Interaction logic for FileListUc.xaml
@@ -21,7 +19,7 @@ namespace PaperRename2.Views.Ucs
         {
             this.OneWayBind(ViewModel, x => x.Files, v => v.ListBox.ItemsSource).DisposeWith(d);
 
-            this.Bind(ViewModel, x => x.SelectedPdf, v => v.ListBox.SelectedItem).DisposeWith(d);
+            this.Bind(ViewModel, x => x.SelectedFile, v => v.ListBox.SelectedItem).DisposeWith(d);
         }
 
         protected override void SetupCommands(CompositeDisposable d)
@@ -31,6 +29,7 @@ namespace PaperRename2.Views.Ucs
             this.BindCommand(ViewModel, x => x.MoveToLaterCmd, v => v.LaterBtn).DisposeWith(d);
             this.BindCommand(ViewModel, x => x.MoveToRenamedCmd, v => v.RenamedBtn).DisposeWith(d);
             this.BindCommand(ViewModel, x => x.OpenPdfCmd, v => v.OpenPdfBtn).DisposeWith(d);
+            this.BindCommand(ViewModel, x => x.RemoveProtectionCmd, v => v.RemoveProtectionBtn).DisposeWith(d);
           
         }
     }

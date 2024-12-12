@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace PaperRename2.Views.Ucs
+namespace PaperRename2.Wpf.Views.Ucs
 {
     /// <summary>
     /// Interaction logic for HelpUc.xaml

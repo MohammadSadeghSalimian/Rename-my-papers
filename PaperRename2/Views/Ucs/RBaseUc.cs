@@ -1,7 +1,7 @@
 ﻿using System.Reactive.Disposables;
 using ReactiveUI;
 
-namespace PaperRename2.Views.Ucs;
+namespace PaperRename2.Wpf.Views.Ucs;
 
 public abstract class RBaseUc<T> : ReactiveUserControl<T> where T : ReactiveObject
 {

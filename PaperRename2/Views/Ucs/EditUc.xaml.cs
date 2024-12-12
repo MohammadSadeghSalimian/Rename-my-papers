@@ -1,12 +1,12 @@
-﻿using PaperRename2.Services;
-using Splat;
-using System.Reactive.Disposables;
+﻿using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Input;
-using PaperRename2.ViewModels;
+using PaperRename2.Wpf.Services;
+using PaperRename2.Wpf.ViewModels;
 using ReactiveUI;
+using Splat;
 
-namespace PaperRename2.Views.Ucs
+namespace PaperRename2.Wpf.Views.Ucs
 {
     /// <summary>
     /// Interaction logic for EditUc.xaml
